@@ -7,7 +7,7 @@ from pptx import Presentation
 from pptx.util import Inches, Pt
 
 from work_ppt.compose import _delete_slides, _fill_placeholders, _layout_by_name, compose
-from work_ppt.diagrams import add_architecture_stack, add_process_row
+from work_ppt.diagrams import add_csa_hca_fork, add_decoder_callouts, add_sibling_row
 from work_ppt.onboard import onboard
 
 REPO = Path(__file__).resolve().parents[1]
@@ -103,17 +103,23 @@ OPTIMIZED_PLAN = {
             ],
         },
         {
-            "action_title": "新架構在砍三種成本：KV 記憶體、Attention FLOPs、Residual 表達力",
+            "action_title": "新架構在砍三種平行成本，不是一條流水線",
             "layout_hint": "section",
-            "slots": ["新架構在砍三種成本：KV 記憶體、Attention FLOPs、Residual 表達力"],
-            "diagram": "process-3",
+            "slots": ["新架構在砍三種平行成本，不是一條流水線"],
+            "diagram": "sibling-costs",
+        },
+        {
+            "action_title": "四種改動都掛在同一個 decoder block 上",
+            "layout_hint": "section",
+            "slots": ["四種改動都掛在同一個 decoder block 上"],
+            "diagram": "decoder-callouts",
         },
         {
             "action_title": "Gemma 4 用跨層 KV 重用砍 cache，把多出來的容量放進 PLE",
             "layout_hint": "two-col",
             "slots": [
                 "Gemma 4 用跨層 KV 重用砍 cache，把多出來的容量放進 PLE",
-                "E2B：35 層，前 15 算 KV，後 20 重用；MQA + 滑窗 4:1\nE4B：42 層，24 算 KV，後 18 重用\n128K bf16：E2B 約省 2.7 GB，E4B 約 6 GB（未計滑窗）",
+                "家族還有 26B MoE 與 31B dense；E2B/E4B 才做跨層 KV 分享\nE2B：35 層，前 15 算 KV，後 20 重用；MQA + 滑窗 4:1\nE4B：42 層，24 算 KV，後 18 重用\n128K bf16：E2B 約省 2.7 GB，E4B 約省 6 GB（未計滑窗）",
                 "PLE：E2B 2.3B effective / 5.1B with embeddings\nE4B 4.5B / 8B\n額外容量在 lookup 表，不把整個 stack 做胖\n作者承認缺少對 2.3B / 5.1B 常規模型的公開對照",
             ],
         },
@@ -141,22 +147,22 @@ OPTIMIZED_PLAN = {
             "slots": [
                 "DeepSeek V4 沿序列軸壓縮（CSA/HCA），並用 mHC 加寬 residual",
                 "CSA：m=4 + 稀疏 top-k（DSA 風格）\nHCA：m'=128 再對短 cache 做 dense attention\n兩者都保留 128 token 未壓縮近窗",
-                "相對 V3.2、1M context：\nV4-Pro 27% FLOPs / 10% KV\nV4-Flash 10% FLOPs / 7% KV\n作者：不能說 CSA/HCA 普遍優於 MLA；沒有獨立 ablation",
+                "mHC：n=4 平行 residual；Res mapping 投影到雙隨機矩陣\n27B 實作 n=4 訓練時間 +6.7%；原 HC FLOPs 13.36G→13.38G/token\n相對 V3.2、1M：V4-Pro 27% FLOPs / 10% KV；V4-Flash 10% / 7%\n作者：不能說 CSA/HCA 普遍優於 MLA；沒有獨立 ablation",
             ],
         },
         {
-            "action_title": "CSA 保細節、HCA 保覆蓋，近窗負責最新 token",
+            "action_title": "CSA 保細節、HCA 保覆蓋，近窗被兩條路徑共用",
             "layout_hint": "section",
-            "slots": ["CSA 保細節、HCA 保覆蓋，近窗負責最新 token"],
-            "diagram": "csa-hca-stack",
+            "slots": ["CSA 保細節、HCA 保覆蓋，近窗被兩條路徑共用"],
+            "diagram": "csa-hca-fork",
         },
         {
-            "action_title": "可核對的數字都在這張表，沒寫進來源的數字不要編",
+            "action_title": "跨層分享省的是數 GB；V4 在 1M 把 KV 壓到 V3.2 的 7–10%",
             "layout_hint": "four-col",
             "slots": [
-                "可核對的數字都在這張表，沒寫進來源的數字不要編",
-                "Gemma 4 E2B\n128K bf16\n約 2.7 GB KV\n（跨層分享、未計滑窗）",
-                "Gemma 4 E4B\n128K\n約 6 GB KV",
+                "跨層分享省的是數 GB；V4 在 1M 把 KV 壓到 V3.2 的 7–10%",
+                "Gemma 4 E2B\n128K bf16\n跨層分享約省 2.7 GB\n（未計滑窗）",
+                "Gemma 4 E4B\n128K\n跨層分享約省 6 GB\n（未計滑窗）",
                 "V4-Pro @ 1M\n27% FLOPs\n10% KV vs V3.2",
                 "V4-Flash @ 1M\n10% FLOPs\n7% KV vs V3.2",
             ],
@@ -180,18 +186,16 @@ def build_optimized(dest: Path, template: Path | None = None) -> Path:
     prs = Presentation(str(dest))
     for i, spec in enumerate(OPTIMIZED_PLAN["slides"]):
         kind = spec.get("diagram")
-        if kind == "process-3":
-            add_process_row(
+        if kind == "sibling-costs":
+            add_sibling_row(
                 prs.slides[i],
                 ["KV 記憶體", "Attention FLOPs", "Residual 表達力"],
                 top=Inches(3.2),
             )
-        elif kind == "csa-hca-stack":
-            add_architecture_stack(
-                prs.slides[i],
-                ["近窗 128 token 未壓縮 KV", "CSA m=4 稀疏選擇", "HCA m'=128 dense 短 cache"],
-                top=Inches(2.4),
-            )
+        elif kind == "decoder-callouts":
+            add_decoder_callouts(prs.slides[i])
+        elif kind == "csa-hca-fork":
+            add_csa_hca_fork(prs.slides[i])
     prs.save(str(dest))
     plan_path = dest.with_suffix(".plan.json")
     plan_path.write_text(json.dumps(OPTIMIZED_PLAN, indent=2, ensure_ascii=False), encoding="utf-8")

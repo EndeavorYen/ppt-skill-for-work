@@ -1,6 +1,6 @@
 {
   "source": "eval/gold/optimized.pptx",
-  "slide_count": 10,
+  "slide_count": 11,
   "slides": [
     {
       "index": 1,
@@ -45,7 +45,7 @@
       "blocks": [
         {
           "role": "title",
-          "text": "新架構在砍三種成本：KV 記憶體、Attention FLOPs、Residual 表達力",
+          "text": "新架構在砍三種平行成本，不是一條流水線",
           "shape": "Title 1"
         },
         {
@@ -67,6 +67,42 @@
     },
     {
       "index": 4,
+      "layout": "title-centered",
+      "blocks": [
+        {
+          "role": "title",
+          "text": "四種改動都掛在同一個 decoder block 上",
+          "shape": "Title 1"
+        },
+        {
+          "role": "body",
+          "text": "Decoder block\u000bAttention + FFN",
+          "shape": "Rounded Rectangle 2"
+        },
+        {
+          "role": "body",
+          "text": "KV-share\u000b跨層重用 K/V",
+          "shape": "Rounded Rectangle 3"
+        },
+        {
+          "role": "body",
+          "text": "PLE\u000blookup 補容量",
+          "shape": "Rounded Rectangle 4"
+        },
+        {
+          "role": "body",
+          "text": "CCA\u000b潛空間算 attention",
+          "shape": "Rounded Rectangle 5"
+        },
+        {
+          "role": "body",
+          "text": "mHC\u000bn=4 residual",
+          "shape": "Rounded Rectangle 6"
+        }
+      ]
+    },
+    {
+      "index": 5,
       "layout": "column-2-centered",
       "blocks": [
         {
@@ -76,7 +112,7 @@
         },
         {
           "role": "body",
-          "text": "E2B：35 層，前 15 算 KV，後 20 重用；MQA + 滑窗 4:1\nE4B：42 層，24 算 KV，後 18 重用\n128K bf16：E2B 約省 2.7 GB，E4B 約 6 GB（未計滑窗）",
+          "text": "家族還有 26B MoE 與 31B dense；E2B/E4B 才做跨層 KV 分享\nE2B：35 層，前 15 算 KV，後 20 重用；MQA + 滑窗 4:1\nE4B：42 層，24 算 KV，後 18 重用\n128K bf16：E2B 約省 2.7 GB，E4B 約省 6 GB（未計滑窗）",
           "shape": "Text Placeholder 2"
         },
         {
@@ -87,7 +123,7 @@
       ]
     },
     {
-      "index": 5,
+      "index": 6,
       "layout": "column-2-centered",
       "blocks": [
         {
@@ -108,7 +144,7 @@
       ]
     },
     {
-      "index": 6,
+      "index": 7,
       "layout": "column-2-centered",
       "blocks": [
         {
@@ -129,7 +165,7 @@
       ]
     },
     {
-      "index": 7,
+      "index": 8,
       "layout": "column-2-centered",
       "blocks": [
         {
@@ -144,49 +180,49 @@
         },
         {
           "role": "body",
-          "text": "相對 V3.2、1M context：\nV4-Pro 27% FLOPs / 10% KV\nV4-Flash 10% FLOPs / 7% KV\n作者：不能說 CSA/HCA 普遍優於 MLA；沒有獨立 ablation",
+          "text": "mHC：n=4 平行 residual；Res mapping 投影到雙隨機矩陣\n27B 實作 n=4 訓練時間 +6.7%；原 HC FLOPs 13.36G→13.38G/token\n相對 V3.2、1M：V4-Pro 27% FLOPs / 10% KV；V4-Flash 10% / 7%\n作者：不能說 CSA/HCA 普遍優於 MLA；沒有獨立 ablation",
           "shape": "Text Placeholder 3"
         }
       ]
     },
     {
-      "index": 8,
+      "index": 9,
       "layout": "title-centered",
       "blocks": [
         {
           "role": "title",
-          "text": "CSA 保細節、HCA 保覆蓋，近窗負責最新 token",
+          "text": "CSA 保細節、HCA 保覆蓋，近窗被兩條路徑共用",
           "shape": "Title 1"
         },
         {
           "role": "body",
-          "text": "近窗 128 token 未壓縮 KV",
+          "text": "近窗 128 token 未壓縮 KV（兩條路徑都保留）",
           "shape": "Rounded Rectangle 2"
         },
         {
           "role": "body",
-          "text": "CSA m=4 稀疏選擇",
+          "text": "CSA：m=4 + 稀疏 top-k\u000b保細節",
           "shape": "Rounded Rectangle 3"
         },
         {
           "role": "body",
-          "text": "HCA m'=128 dense 短 cache",
+          "text": "HCA：m'=128 再 dense\u000b保覆蓋",
           "shape": "Rounded Rectangle 4"
         }
       ]
     },
     {
-      "index": 9,
+      "index": 10,
       "layout": "column-4-centered",
       "blocks": [
         {
           "role": "body",
-          "text": "Gemma 4 E2B\n128K bf16\n約 2.7 GB KV\n（跨層分享、未計滑窗）",
+          "text": "Gemma 4 E2B\n128K bf16\n跨層分享約省 2.7 GB\n（未計滑窗）",
           "shape": "Text Placeholder 1"
         },
         {
           "role": "body",
-          "text": "Gemma 4 E4B\n128K\n約 6 GB KV",
+          "text": "Gemma 4 E4B\n128K\n跨層分享約省 6 GB\n（未計滑窗）",
           "shape": "Text Placeholder 2"
         },
         {
@@ -201,13 +237,13 @@
         },
         {
           "role": "title",
-          "text": "可核對的數字都在這張表，沒寫進來源的數字不要編",
+          "text": "跨層分享省的是數 GB；V4 在 1M 把 KV 壓到 V3.2 的 7–10%",
           "shape": "Title 5"
         }
       ]
     },
     {
-      "index": 10,
+      "index": 11,
       "layout": "content-centered-a",
       "blocks": [
         {

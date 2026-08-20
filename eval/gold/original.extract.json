@@ -1,0 +1,155 @@
+{
+  "source": "eval/gold/original.pptx",
+  "slide_count": 9,
+  "slides": [
+    {
+      "index": 1,
+      "layout": "title-cover",
+      "blocks": [
+        {
+          "role": "body",
+          "text": "LLM Architecture Update",
+          "shape": "Text Placeholder 1"
+        },
+        {
+          "role": "body",
+          "text": "Gemma 4 / Laguna / ZAYA1 / DeepSeek V4",
+          "shape": "Text Placeholder 2"
+        },
+        {
+          "role": "body",
+          "text": "Internal sharing",
+          "shape": "Text Placeholder 3"
+        }
+      ]
+    },
+    {
+      "index": 2,
+      "layout": "content-centered-a",
+      "blocks": [
+        {
+          "role": "body",
+          "text": "Introduction\nGemma 4\nLaguna XS.2\nZAYA1-8B\nDeepSeek V4\nConclusion",
+          "shape": "Text Placeholder 1"
+        },
+        {
+          "role": "title",
+          "text": "Agenda",
+          "shape": "Title 2"
+        }
+      ]
+    },
+    {
+      "index": 3,
+      "layout": "content-centered-a",
+      "blocks": [
+        {
+          "role": "body",
+          "text": "LLMs are getting better\nContext is longer\nThere are many new models in 2026\nArchitecture is important",
+          "shape": "Text Placeholder 1"
+        },
+        {
+          "role": "title",
+          "text": "Background",
+          "shape": "Title 2"
+        }
+      ]
+    },
+    {
+      "index": 4,
+      "layout": "column-2-centered",
+      "blocks": [
+        {
+          "role": "title",
+          "text": "Gemma 4 Overview",
+          "shape": "Title 1"
+        },
+        {
+          "role": "body",
+          "text": "E2B and E4B for devices\n26B MoE\n31B dense\nUses GQA",
+          "shape": "Text Placeholder 2"
+        },
+        {
+          "role": "body",
+          "text": "KV sharing across layers\nPLE embeddings\nSaves memory\nCode on GitHub",
+          "shape": "Text Placeholder 3"
+        }
+      ]
+    },
+    {
+      "index": 5,
+      "layout": "content-centered-a",
+      "blocks": [
+        {
+          "role": "body",
+          "text": "Poolside coding model\n40 layers\nSliding window + global attention\nDifferent query heads per layer\nSimilar to OpenELM",
+          "shape": "Text Placeholder 1"
+        },
+        {
+          "role": "title",
+          "text": "Laguna XS.2",
+          "shape": "Title 2"
+        }
+      ]
+    },
+    {
+      "index": 6,
+      "layout": "content-centered-a",
+      "blocks": [
+        {
+          "role": "body",
+          "text": "Zyphra model on AMD GPUs\nCompressed Convolutional Attention\nRelated to MLA\nMoE with one expert\nPaper on arXiv",
+          "shape": "Text Placeholder 1"
+        },
+        {
+          "role": "title",
+          "text": "ZAYA1-8B",
+          "shape": "Title 2"
+        }
+      ]
+    },
+    {
+      "index": 7,
+      "layout": "content-centered-a",
+      "blocks": [
+        {
+          "role": "body",
+          "text": "Biggest release this year\nmHC residual streams\nCSA and HCA compression\nBetter than V3.2\nVery sparse MoE",
+          "shape": "Text Placeholder 1"
+        },
+        {
+          "role": "title",
+          "text": "DeepSeek V4",
+          "shape": "Title 2"
+        }
+      ]
+    },
+    {
+      "index": 8,
+      "layout": "content-centered-a",
+      "blocks": [
+        {
+          "role": "body",
+          "text": "Some memory savings\nLong context is cheaper\nLots of complexity\nNeed to keep learning",
+          "shape": "Text Placeholder 1"
+        },
+        {
+          "role": "title",
+          "text": "Key Numbers",
+          "shape": "Title 2"
+        }
+      ]
+    },
+    {
+      "index": 9,
+      "layout": "title-centered",
+      "blocks": [
+        {
+          "role": "title",
+          "text": "Thank You",
+          "shape": "Title 1"
+        }
+      ]
+    }
+  ]
+}

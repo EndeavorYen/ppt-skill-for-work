@@ -86,7 +86,7 @@ Onboard 產出每個 layout 的 placeholder 清單（idx, type, name）。Compos
 2. `eval/gold/ab/`：optimize 只讀該 pptx。B 的數字必須出現在 A 的 extract。可改敘事、排版、新增原生圖。
 3. `eval/gold/sourced/`：同一份 A + `docs/fixtures/source/raschka-2026-llm-architectures.md`。B 深度廣度必須勝出。
 4. 凍結 `story.json` + pptx 進 git。pytest 不呼叫模型。六維裡 narrative/depth/logic/story 由人看凍結稿。
-5. 下一擴展：弱母版無 source A/B（layout 不要求嚴格勝出，只要不發明 master）。
+5. 弱母版（Title + Content only）不進 gold。硬套密母版故事無法通過視覺 QA。降級只做單元測試。
 
 ## Data model
 
@@ -114,7 +114,7 @@ Onboard 產出每個 layout 的 placeholder 清單（idx, type, name）。Compos
 
 ## Rollout
 
-v0：onboard + extract + compose + optimize + Inner Chapter `ab/` + `sourced/` gold。下一步：弱母版無 source A/B。再後：light/dark、弱母版 sourced、OfficeCLI mermaid/screenshot、draw.io 匯入。
+v0：onboard + extract + compose + optimize + Inner Chapter `ab/` + `sourced/` gold，以及 light/dark 家族。弱母版不進 gold。再後：theme-aware diagrams、OfficeCLI mermaid/screenshot、draw.io 匯入。
 
 ## Key Decisions
 

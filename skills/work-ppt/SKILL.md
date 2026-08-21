@@ -66,7 +66,7 @@ Shared A: `eval/gold/original.pptx`. Two frozen B decks grown from that file:
 
 - `eval/gold/ab/` — Inner Chapter, no extra source.
 - `eval/gold/sourced/` — Inner Chapter + Raschka notes.
-- Families: `weak/`, `light/`, `dark/` each with `ab/` and `sourced/`. Weak layout uses the Q12' bar (no invented master).
+- Families in gold: `light/` and `dark/` each with `ab/` and `sourced/`. Impoverished (two-layout) masters are **not** a gold case; only unit-test that hints downgrade and no master is invented.
 
 pytest does not call a model. Internal eval: `eval-prompt` / `eval-check` and `.grok/workflows/gold-eval-story.rhai` with `eval/gold/grill-answers.json`. Copy a new story into git only after review.
 

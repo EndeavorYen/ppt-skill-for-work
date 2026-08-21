@@ -31,23 +31,19 @@ TEMPLATES = {
 CASE_TABLE = {
     "ab": {"family": "inner", "kind": "ab"},
     "sourced": {"family": "inner", "kind": "sourced"},
-    "weak-ab": {"family": "weak", "kind": "ab"},
     "light-ab": {"family": "light", "kind": "ab"},
     "dark-ab": {"family": "dark", "kind": "ab"},
     "light-sourced": {"family": "light", "kind": "sourced"},
     "dark-sourced": {"family": "dark", "kind": "sourced"},
-    "weak-sourced": {"family": "weak", "kind": "sourced"},
 }
 CASES = tuple(CASE_TABLE)
 CASE_ORDER = (
     "ab",
     "sourced",
-    "weak-ab",
     "light-ab",
     "dark-ab",
     "light-sourced",
     "dark-sourced",
-    "weak-sourced",
 )
 
 CATALOG_STORY = {

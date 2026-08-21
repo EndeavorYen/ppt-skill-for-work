@@ -3,7 +3,7 @@
 **Agent 寫故事。腳本只套你提供的真實母版。**  
 不是「更會畫 PPT 的模型」。缺 brief 就拒畫；數字不在來源裡就停；流程圖必須可編輯。
 
-[![pytest](https://img.shields.io/badge/pytest-24%20passed-2ea44f)](tests/)
+[![pytest](https://img.shields.io/badge/pytest-22%20passed-2ea44f)](tests/)
 [![license](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 
 ---
@@ -19,7 +19,7 @@ A 是典型 AI 初稿。B 從同一份檔長出，用同一套母版。請用 Po
 | [`eval/gold/sourced/optimized.pptx`](eval/gold/sourced/optimized.pptx) | B：可讀筆記，深度廣度必須勝 |
 | [`eval/gold/ab/review.md`](eval/gold/ab/review.md) | 六維評審（A/B） |
 | [`eval/gold/sourced/review.md`](eval/gold/sourced/review.md) | 六維評審（sourced） |
-| [`eval/gold/README.md`](eval/gold/README.md) | 八場 gold 索引（含弱／light／dark 母版） |
+| [`eval/gold/README.md`](eval/gold/README.md) | gold 索引（Inner Chapter + light／dark） |
 
 ---
 
@@ -87,16 +87,15 @@ python -m work_ppt preview out.pptx -o preview.png
 | **A/B** | 只能來自 A 的 extract | 敘事、排版、原生圖 | [`eval/gold/ab/`](eval/gold/ab/) |
 | **sourced** | A + Raschka 筆記 | 深度廣度必須明顯勝出 | [`eval/gold/sourced/`](eval/gold/sourced/) |
 
-同一套故事還套在另外三套公開母版上（推展性代理，不是公司檔）：
+同一套故事還套在 light／dark 公開母版上（推展性代理，不是公司檔）：
 
 | 母版 | A/B | sourced |
 |---|---|---|
 | Inner Chapter（密） | [`ab/`](eval/gold/ab/) | [`sourced/`](eval/gold/sourced/) |
-| 弱：Title + Content | [`weak/ab/`](eval/gold/weak/ab/) | [`weak/sourced/`](eval/gold/weak/sourced/) |
 | Office 預設 11 layout | [`light/ab/`](eval/gold/light/ab/) | [`light/sourced/`](eval/gold/light/sourced/) |
 | Dark navy | [`dark/ab/`](eval/gold/dark/ab/) | [`dark/sourced/`](eval/gold/dark/sourced/) |
 
-弱母版 **layout 不要求嚴格勝出**：不發明 master + 標題是 takeaway 即過。
+弱母版（只有 Title + Content）**不進 gold**。硬套密母版故事只會得到配色錯、圖溢位、比爛好一點的稿。降級行為由 `tests/test_templates.py` 覆蓋：hint 對不到就落到 Title and Content，禁止自創新 master。
 
 pytest 不呼叫模型。內部 eval 用預先備好的 grilling 答案產 story，**落盤進 git 才算數**：
 

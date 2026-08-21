@@ -5,5 +5,4 @@ __pycache__/
 runs/
 profiles/
 *.png
-!docs/assets/*.png
 .eval-tmp/

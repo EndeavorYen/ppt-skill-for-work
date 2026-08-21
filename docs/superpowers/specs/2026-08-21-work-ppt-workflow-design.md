@@ -2,7 +2,7 @@
 
 | Field | Value |
 |-------|--------|
-| Status | Draft for implementation |
+| Status | Accepted for Inner Chapter gold split (ab + sourced) |
 | Date | 2026-08-21 |
 | Repo | `ppt-skill-for-work` |
 
@@ -12,7 +12,7 @@
 
 工作簡報的失敗來自一次生成整份、不管母版、把流程圖畫成死圖。本系統拆成閘門式管線：Brief → Onboard → Story freeze → Compose/Mutate → Diagram router → Draft → Polish。
 
-機械層以 python-pptx 填 **真實 slide layout placeholders**，OfficeCLI 負責 mutate、Mermaid→原生 shape、polish 預覽。敘事層（ghost deck / action title）由 Agent 依 skill 寫入 `story.json`，腳本不發明結論。
+機械層以 python-pptx 填 **真實 slide layout placeholders**，並做 compose / mutate。OfficeCLI 負責 theme、`qa`；Mermaid→原生 shape 與 screenshot polish 列為後續。敘事層（ghost deck / action title）由 Agent 依 skill 寫入 `story.json`，腳本不發明結論。
 
 ## Goals
 
@@ -20,7 +20,7 @@
 - 兩條路徑：`compose`（從母版組新份）與 `mutate`/`optimize`（改上份或優化同一份）。
 - 流程圖、架構圖、時序圖必須是原生 shape；帶字的圖禁止生圖。
 - Draft 10–15 分鐘（樣板已 profile）；Polish ≤30 分鐘。
-- **Gold test（新增）：** 輸入一份同時當母版與資料來源的 deck，輸出優化版。盲測要求版型一致，且新稿在格式、排版、敘事、技術深度、邏輯、故事流暢度全面勝出。
+- **Gold test：** 同一份淺 AI 初稿當 A。兩場 B 都從該檔長出：`ab/` 無額外 source（數字 ⊆ extract）；`sourced/` 可讀 Raschka 筆記且深度廣度必須勝出。兩場不可混在一對檔。
 
 ## Non-goals
 
@@ -56,9 +56,10 @@ flowchart TD
 ```text
 python -m work_ppt onboard <template.pptx> -o profiles/<id>.json
 python -m work_ppt extract <deck.pptx> -o extract.json
-python -m work_ppt compose --template T --plan slide_plan.json -o out.pptx
-python -m work_ppt optimize <deck.pptx> --story story.json -o out.pptx
+python -m work_ppt compose --brief B.json --story S.json --template T.pptx -o out.pptx
+python -m work_ppt optimize <deck.pptx> --brief B.json --story S.json -o out.pptx
 python -m work_ppt gold-baseline -o eval/gold/original.pptx
+python -m work_ppt gold-optimize --case all
 ```
 
 缺 brief 欄位則拒畫。新樣板 onboard 不算進 15 分鐘 SLA。
@@ -73,17 +74,19 @@ Onboard 產出每個 layout 的 placeholder 清單（idx, type, name）。Compos
 
 | Kind | Draft | Polish |
 |------|-------|--------|
-| architecture / process / sequence | native shapes or OfficeCLI mermaid | 重排連線，仍原生 |
-| numbers | native table/chart | theme 色 |
-| real screenshot | 用提供的檔 | 裁切 |
-| atmosphere, no required text | skip | 可生圖 |
+| architecture / process / sequence | native shapes | 仍可編輯；禁止 PNG 流程圖 |
+| numbers | native table/shape | theme 色 |
+| real screenshot | plan 提供的檔 | 裁切 |
+| generated image | gold B 禁止 | 最終檔可，但不得代替流程／架構／時序 |
 | labeled flowchart as PNG | defect | defect |
 
 ### Gold test
 
-1. 用 Inner Chapter 母版產出一份「典型 AI 初稿」`eval/gold/original.pptx`（主題式標題、子彈清單、Thank you、無 ghost deck、無數值表與原生圖）。內容事實只來自 Raschka 2026-05-16 筆記，寫進該 pptx。
-2. `optimize` 只讀這份 pptx（母版+素材），產出 `eval/gold/optimized.pptx`。
-3. 盲測：兩份 deck 打亂標籤。評審必須確認 theme/layouts 同源，且 B 在六個維度全面勝出。任一維打平或落敗 → 失敗，迭代。
+1. 用 Inner Chapter 母版產出淺 AI 初稿 `eval/gold/original.pptx`（主題式標題、子彈清單、Thank you）。這份檔同時是 A 與 B 的母版。
+2. `eval/gold/ab/`：optimize 只讀該 pptx。B 的數字必須出現在 A 的 extract。可改敘事、排版、新增原生圖。
+3. `eval/gold/sourced/`：同一份 A + `docs/fixtures/source/raschka-2026-llm-architectures.md`。B 深度廣度必須勝出。
+4. 凍結 `story.json` + pptx 進 git。pytest 不呼叫模型。六維裡 narrative/depth/logic/story 由人看凍結稿。
+5. 下一擴展：弱母版無 source A/B（layout 不要求嚴格勝出，只要不發明 master）。
 
 ## Data model
 
@@ -107,20 +110,20 @@ Onboard 產出每個 layout 的 placeholder 清單（idx, type, name）。Compos
 
 ## Observability
 
-每次 run 寫 `runs/<id>/`：brief、profile、extract、story、plan、pptx、`qa.json`。Gold 寫 `eval/gold/blind_review.json`。
+每次 run 寫 `runs/<id>/`：brief、profile、story、plan、pptx。Gold 結構閘門寫 `eval/gold/<case>/blind_review.json`。
 
 ## Rollout
 
-v0：onboard + extract + compose + optimize + gold。v1：mutate 外科手術、第二語言 polish、四母版回歸。失敗回滾：保留 original，不覆蓋。
+v0：onboard + extract + compose + optimize + Inner Chapter `ab/` + `sourced/` gold。下一步：弱母版無 source A/B。再後：light/dark、弱母版 sourced、OfficeCLI mermaid/screenshot、draw.io 匯入。
 
 ## Key Decisions
 
 1. **管線不是 mega-skill** — 一次生成是痛點根源。
-2. **python-pptx 填 placeholder，OfficeCLI 做 mutate/mermaid** — 對齊 OfficeCLI 自己的 layout 限制。
+2. **python-pptx 做 compose 與 mutate；OfficeCLI 做 theme 與 qa** — 新頁必須 `add_slide(layout)`。Mermaid／screenshot 後續。
 3. **Story 凍結後才渲染** — ghost deck 可單獨審。
 4. **Gold = 優化既有 deck** — 比「空白母版填同一 brief」更接近真實工作。
 5. **弱母版必須降級而非發明 layout**。
-6. **Draft 禁止生圖與多輪截圖 QA**。
+6. **Gold B 禁止生圖。** 產品最終檔可生圖，但流程／架構／時序必須可編輯。Draft 不做多輪截圖 QA。
 
 ## PR Plan
 

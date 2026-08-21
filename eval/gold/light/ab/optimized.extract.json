@@ -1,0 +1,180 @@
+{
+  "source": "D:/Code/ppt-skill-for-work/eval/gold/light/ab/optimized.pptx",
+  "slide_count": 9,
+  "slides": [
+    {
+      "index": 1,
+      "layout": "Title Slide",
+      "blocks": [
+        {
+          "role": "title",
+          "text": "這份稿把 Gemma 4、Laguna、ZAYA1、V4 列成目錄，沒有做成決策",
+          "shape": "Title 1"
+        },
+        {
+          "role": "title",
+          "text": "同一份 Internal sharing 初稿的 A/B 優化",
+          "shape": "Subtitle 2"
+        }
+      ]
+    },
+    {
+      "index": 2,
+      "layout": "Title and Content",
+      "blocks": [
+        {
+          "role": "title",
+          "text": "Agenda 與 Background 只宣布有很多 2026 模型，沒有說長上下文為何變成架構問題",
+          "shape": "Title 1"
+        },
+        {
+          "role": "body",
+          "text": "初稿標題是 Introduction / Gemma 4 / Laguna XS.2 / ZAYA1-8B / DeepSeek V4 / Conclusion\nBackground 只剩 LLMs are getting better、Context is longer、Architecture is important\nKey Numbers 一頁沒有任何數字，只有 Some memory savings",
+          "shape": "Content Placeholder 2"
+        }
+      ]
+    },
+    {
+      "index": 3,
+      "layout": "Section Header",
+      "blocks": [
+        {
+          "role": "title",
+          "text": "初稿其實已經點名三種平行手段，只是把它們拆成四個模型簡介",
+          "shape": "Title 1"
+        },
+        {
+          "role": "body",
+          "text": "KV sharing / PLE",
+          "shape": "Rounded Rectangle 3"
+        },
+        {
+          "role": "body",
+          "text": "query heads per layer",
+          "shape": "Rounded Rectangle 4"
+        },
+        {
+          "role": "body",
+          "text": "CSA and HCA",
+          "shape": "Rounded Rectangle 5"
+        }
+      ]
+    },
+    {
+      "index": 4,
+      "layout": "Two Content",
+      "blocks": [
+        {
+          "role": "title",
+          "text": "Gemma 4 用跨層 KV sharing 與 PLE 換記憶體，稿上卻只寫 Saves memory",
+          "shape": "Title 1"
+        },
+        {
+          "role": "body",
+          "text": "E2B 與 E4B 對 devices\n另有 26B MoE 與 31B dense\nUses GQA",
+          "shape": "Content Placeholder 2"
+        },
+        {
+          "role": "body",
+          "text": "KV sharing across layers\nPLE embeddings\nCode on GitHub\n記憶體結論停在 Saves memory，沒有數",
+          "shape": "Content Placeholder 3"
+        }
+      ]
+    },
+    {
+      "index": 5,
+      "layout": "Two Content",
+      "blocks": [
+        {
+          "role": "title",
+          "text": "Laguna 的 40 層把滑窗與全域注意力拆開，並讓各層 query head 不同",
+          "shape": "Title 1"
+        },
+        {
+          "role": "body",
+          "text": "Poolside coding model\n40 layers\nSliding window + global attention",
+          "shape": "Content Placeholder 2"
+        },
+        {
+          "role": "body",
+          "text": "Different query heads per layer\nSimilar to OpenELM\n初稿沒寫每層幾個 head",
+          "shape": "Content Placeholder 3"
+        }
+      ]
+    },
+    {
+      "index": 6,
+      "layout": "Two Content",
+      "blocks": [
+        {
+          "role": "title",
+          "text": "ZAYA1-8B 的 Compressed Convolutional Attention 跟 MLA 有關，不是新的模型家族",
+          "shape": "Title 1"
+        },
+        {
+          "role": "body",
+          "text": "Zyphra model on AMD GPUs\nRelated to MLA\nMoE with one expert",
+          "shape": "Content Placeholder 2"
+        },
+        {
+          "role": "body",
+          "text": "Paper on arXiv\n初稿沒把壓縮 attention 對上 KV sharing 或 CSA",
+          "shape": "Content Placeholder 3"
+        }
+      ]
+    },
+    {
+      "index": 7,
+      "layout": "Two Content",
+      "blocks": [
+        {
+          "role": "title",
+          "text": "V4 同時丟出 mHC 與 CSA/HCA，再對 V3.2 只寫 Better than",
+          "shape": "Title 1"
+        },
+        {
+          "role": "body",
+          "text": "Biggest release this year\nmHC residual streams\nCSA and HCA compression",
+          "shape": "Content Placeholder 2"
+        },
+        {
+          "role": "body",
+          "text": "Better than V3.2\nVery sparse MoE\n沒有說 better 在 FLOPs、KV 還是品質",
+          "shape": "Content Placeholder 3"
+        }
+      ]
+    },
+    {
+      "index": 8,
+      "layout": "Title and Content",
+      "blocks": [
+        {
+          "role": "title",
+          "text": "標題叫 Key Numbers 的那頁，沒有任何可檢查的數",
+          "shape": "Title 1"
+        },
+        {
+          "role": "body",
+          "text": "Some memory savings\nLong context is cheaper\nLots of complexity\nNeed to keep learning\nA/B 不補 26B / 31B / 40 以外的新數；缺的數留白，不發明",
+          "shape": "Content Placeholder 2"
+        }
+      ]
+    },
+    {
+      "index": 9,
+      "layout": "Title and Content",
+      "blocks": [
+        {
+          "role": "title",
+          "text": "先把稿上已出現的 KV sharing 講清楚，再決定要不要碰 CSA 與 HCA",
+          "shape": "Title 1"
+        },
+        {
+          "role": "body",
+          "text": "初稿已點名 KV sharing、PLE、per-layer query heads、CCA/MLA、mHC、CSA and HCA\n不以致謝頁作結\n沒有新增模型線\n要更深的數，必須另開有 source 的測項，不混進這場 A/B",
+          "shape": "Content Placeholder 2"
+        }
+      ]
+    }
+  ]
+}

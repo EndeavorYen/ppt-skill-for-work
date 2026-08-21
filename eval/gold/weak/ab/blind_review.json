@@ -1,0 +1,12 @@
+{
+  "same_template": true,
+  "family": "weak",
+  "structural": {
+    "no_thank_you": true,
+    "slide_count_gte": true,
+    "has_native_shapes": true,
+    "takeaway_titles": true,
+    "no_invented_master": true
+  },
+  "pass": true
+}

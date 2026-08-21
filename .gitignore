@@ -3,5 +3,7 @@ __pycache__/
 .venv/
 .omc/state/
 runs/
+profiles/
 *.png
+!docs/assets/*.png
 .eval-tmp/

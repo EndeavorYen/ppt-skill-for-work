@@ -1,0 +1,14 @@
+{
+  "ab": {
+    "numbers": "extract_only",
+    "language": "zh-Hant-en-terms",
+    "decision": "Start from KV sharing already named in the draft; do not add Raschka numbers.",
+    "closer": "no_thank_you"
+  },
+  "sourced": {
+    "numbers": "raschka_notes",
+    "language": "zh-Hant-en-terms",
+    "decision": "Prototype cross-layer KV sharing first; CSA/HCA is a later bet.",
+    "source": "docs/fixtures/source/raschka-2026-llm-architectures.md"
+  }
+}

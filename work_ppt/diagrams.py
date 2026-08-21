@@ -109,6 +109,37 @@ def add_csa_hca_fork(slide) -> None:
     _arrow(slide, src.left + src.width // 2, src.top + src.height, right.left + right.width // 2, right.top)
 
 
+FLOW_KINDS = {
+    "process",
+    "sequence",
+    "architecture",
+    "sibling",
+    "sibling-costs",
+    "decoder-callouts",
+    "csa-hca-fork",
+}
+
+
+def apply_diagram(slide, kind: str, labels: list[str] | None = None) -> None:
+    labels = list(labels or [])
+    if kind in {"sibling-costs"}:
+        add_sibling_row(
+            slide, labels or ["KV 記憶體", "Attention FLOPs", "Residual 表達力"]
+        )
+    elif kind in {"sibling"}:
+        add_sibling_row(slide, labels)
+    elif kind in {"process", "sequence"}:
+        add_process_row(slide, labels)
+    elif kind in {"architecture"}:
+        add_architecture_stack(slide, labels)
+    elif kind == "decoder-callouts":
+        add_decoder_callouts(slide)
+    elif kind == "csa-hca-fork":
+        add_csa_hca_fork(slide)
+    else:
+        raise ValueError(f"unknown diagram {kind}")
+
+
 def add_decoder_callouts(slide) -> None:
     core = _box(
         slide,

@@ -1,0 +1,12 @@
+{
+  "title": "Long-context cost is now an architecture problem, not just a hardware one",
+  "audience": "mixed-room",
+  "language": "zh-Hant-en-terms",
+  "path": "optimize",
+  "template": "D:/Code/ppt-skill-for-work/docs/fixtures/templates/dense-consulting-inner-chapter.pptx",
+  "prior_deck": "C:/Users/simon.yen/AppData/Local/Temp/pytest-of-SIMON.YEN/pytest-730/test_gold_original_and_optimiz0/original.pptx",
+  "decision": "Which KV/attention strategy should we prototype first for 128K+ agent workloads — cross-layer KV sharing, layer-wise head budgeting, CCA, or wait for CSA/HCA-class sequence compression?",
+  "sources": [
+    "docs/fixtures/source/raschka-2026-llm-architectures.md"
+  ]
+}

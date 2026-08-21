@@ -1,12 +1,28 @@
 # Gold test
 
-Same Inner Chapter master. `original.pptx` is a typical AI first draft (topic titles, bullets, Thank You). `optimized.pptx` is rebuilt from that deck’s facts with a frozen ghost deck and native shapes.
+Shared fact A for Inner Chapter: `original.pptx`.
+
+| Case | A master | Extra source | Directory |
+|---|---|---|---|
+| ab | Inner Chapter | no | `ab/` |
+| sourced | Inner Chapter | Raschka notes | `sourced/` |
+| weak-ab | impoverished | no | `weak/ab/` |
+| light-ab | Office default | no | `light/ab/` |
+| dark-ab | dark navy | no | `dark/ab/` |
+| light-sourced | Office default | Raschka | `light/sourced/` |
+| dark-sourced | dark navy | Raschka | `dark/sourced/` |
+| weak-sourced | impoverished | Raschka | `weak/sourced/` |
+
+`ab` stories share `eval/gold/ab/story.json`. `sourced` stories share `eval/gold/sourced/story.json`. Weak layout uses Q12': no invented master + takeaway titles; not a strict layout win.
 
 ```bash
 python -m work_ppt gold-baseline -o eval/gold/original.pptx
-python -m work_ppt gold-optimize -o eval/gold/optimized.pptx
+python -m work_ppt gold-optimize --case all
+python -m work_ppt eval-prompt --case ab
+python -m work_ppt eval-check --case ab
+python -m pytest tests/ -q
 ```
 
-Blind bar: template family must match, and optimized must win format, layout, narrative, technical depth, logic, and story flow.
+pytest does not call a model. Internal eval: `.grok/workflows/gold-eval-story.rhai` plus `eval/gold/grill-answers.json`. Copy scratch `story.json` into git only after review.
 
-Open both files in PowerPoint. Read titles of `optimized.pptx` in order — they should tell the argument without the body text.
+Gold B: native shapes; optional `picture=` file. No generated flowcharts.

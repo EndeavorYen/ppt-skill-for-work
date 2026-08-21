@@ -5,8 +5,13 @@ from pathlib import Path
 
 from pptx import Presentation
 from pptx.enum.shapes import PP_PLACEHOLDER
+from pptx.util import Inches
 
+from work_ppt.diagrams import FLOW_KINDS, apply_diagram
+from work_ppt.gate import GateError
+from work_ppt.mermaid import add_mermaid, export_drawio
 from work_ppt.onboard import SKIP_PH, onboard
+from work_ppt.qa import QaError
 
 
 def _delete_slides(prs: Presentation) -> None:
@@ -51,6 +56,17 @@ def pick_layout(profile: dict, hint: str, slot_count: int) -> str:
     return names[0]
 
 
+def _insert_picture(slide, image: Path) -> None:
+    image = Path(image)
+    if not image.is_file():
+        raise GateError(f"picture not found: {image}")
+    for shape in slide.placeholders:
+        if shape.placeholder_format.type == PP_PLACEHOLDER.PICTURE:
+            shape.insert_picture(str(image))
+            return
+    slide.shapes.add_picture(str(image), Inches(0.6), Inches(2.4), width=Inches(5.5))
+
+
 def _fill_placeholders(slide, slots: list[str]) -> None:
     fillable = []
     for shape in slide.placeholders:
@@ -89,8 +105,39 @@ def compose(template: Path, plan: dict, dest: Path) -> Path:
         slide = prs.slides.add_slide(layout)
         _fill_placeholders(slide, slots)
         slide_spec["resolved_layout"] = layout_name
+        kind = slide_spec.get("diagram")
+        gen = slide_spec.get("generate_image")
+        if gen and kind in FLOW_KINDS:
+            raise GateError(
+                "generated images cannot replace process/architecture/sequence diagrams"
+            )
+        if kind:
+            apply_diagram(slide, kind, slide_spec.get("diagram_labels") or [])
+        picture = slide_spec.get("picture")
+        if not picture and isinstance(gen, str) and gen not in {"true", "atmosphere"}:
+            picture = gen
+        if picture:
+            _insert_picture(slide, Path(picture))
+        drawio = slide_spec.get("drawio")
+        if drawio:
+            src = Path(drawio)
+            if src.suffix.lower() == ".svg":
+                _insert_picture(slide, src)
+            else:
+                svg = dest.parent / f"{dest.stem}-slide-drawio.svg"
+                _insert_picture(slide, export_drawio(src, svg))
     dest.parent.mkdir(parents=True, exist_ok=True)
     prs.save(str(dest))
+    for index, slide_spec in enumerate(plan["slides"], start=1):
+        mermaid = slide_spec.get("mermaid")
+        if not mermaid:
+            continue
+        try:
+            add_mermaid(dest, index, mermaid)
+        except QaError:
+            raise GateError(
+                "officecli mermaid failed; install officecli or drop the mermaid field"
+            )
     return dest
 
 

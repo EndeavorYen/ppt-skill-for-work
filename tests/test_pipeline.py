@@ -2,7 +2,7 @@ from pathlib import Path
 
 from work_ppt.compose import pick_layout
 from work_ppt.extract import extract
-from work_ppt.gold import TEMPLATE, build_optimized, build_original
+from work_ppt.gold import TEMPLATE, build_case, build_original, gold_review
 from work_ppt.onboard import onboard
 
 REPO = Path(__file__).resolve().parents[1]
@@ -25,7 +25,7 @@ def test_onboard_impoverished_has_two_layouts():
 
 def test_gold_original_and_optimized(tmp_path):
     original = build_original(tmp_path / "original.pptx")
-    optimized = build_optimized(tmp_path / "optimized.pptx")
+    optimized = build_case("sourced", original, tmp_path / "optimized.pptx")
     src = extract(original)
     out = extract(optimized)
     assert src["slide_count"] >= 8
@@ -40,3 +40,8 @@ def test_gold_original_and_optimized(tmp_path):
     assert "KV" in titles or "KV" in " ".join(
         b["text"] for s in out["slides"] for b in s["blocks"]
     )
+    review = gold_review(original, optimized, tmp_path / "blind_review.json")
+    assert review["same_template"]
+    assert review["structural"]["no_thank_you"]
+    assert review["structural"]["has_native_shapes"]
+    assert review["pass"]

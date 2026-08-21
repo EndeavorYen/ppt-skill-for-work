@@ -43,9 +43,9 @@ if (built == () || !built.success) {
 
 phase("Review");
 let review_prompt = "";
-review_prompt += "Blind-compare two decks in D:/Code/ppt-skill-for-work/eval/gold/. ";
-review_prompt += "Read original.extract.json and optimized.extract.json with read_file. ";
-review_prompt += "Also extract both pptx via python -m work_ppt extract if json is stale. ";
+review_prompt += "Blind-compare D:/Code/ppt-skill-for-work/eval/gold/original.pptx against BOTH eval/gold/ab/optimized.pptx and eval/gold/sourced/optimized.pptx. ";
+review_prompt += "ab/ must not introduce numbers absent from original.extract.json. sourced/ may use Raschka notes and must be deeper. ";
+review_prompt += "Read extract json under eval/gold/ and each case directory. ";
 review_prompt += "same_template=true only if optimized uses Inner Chapter layouts (title-cover, column-2-centered, title-centered) like original. ";
 review_prompt += "For each of format, layout, narrative, depth, logic, story: true only if optimized is strictly better. ";
 review_prompt += "pass=true only if same_template and all six wins are true. List gaps otherwise. ";
